@@ -26,3 +26,16 @@ target_link_libraries(vsgconv
 install(TARGETS vsgconv
         RUNTIME DESTINATION bin
 )
+
+if(WIN32)
+	#copy vsg dlls into target directories
+	get_target_property(VSG_LOCATION_DEBUG vsg::vsg IMPORTED_LOCATION_DEBUG)
+	get_target_property(VSG_LOCATION_RELEASE vsg::vsg IMPORTED_LOCATION_RELEASE)
+	add_custom_command(TARGET vsgconv POST_BUILD
+				   COMMAND ${CMAKE_COMMAND} -E copy_if_different 
+				   $<$<CONFIG:Debug>:${VSG_LOCATION_DEBUG}> 
+				   $<$<NOT:$<CONFIG:Debug>>:${VSG_LOCATION_RELEASE}> 
+				   $<TARGET_FILE_DIR:vsgconv>)
+				   
+	install(DIRECTORY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/$<CONFIG>/ DESTINATION bin FILES_MATCHING PATTERN "*.dll")
+endif(WIN32)
