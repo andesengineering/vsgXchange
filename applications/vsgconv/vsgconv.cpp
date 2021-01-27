@@ -375,7 +375,7 @@ int main(int argc, char** argv)
             auto status = vsg::ActivityStatus::create();
             auto operationThreads = vsg::OperationThreads::create(numThreads, status);
             auto operationQueue = operationThreads->queue;
-            auto latch = vsg::Latch::create(collectReadRequests.readRequests.size());
+            auto latch = vsg::Latch::create(int(collectReadRequests.readRequests.size()));
 
             vsg::observer_ptr<vsg::OperationQueue> obs_queue(operationQueue);
 

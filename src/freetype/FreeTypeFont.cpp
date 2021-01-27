@@ -133,7 +133,7 @@ vsg::ref_ptr<vsg::Group> ReaderWriter_freetype::createOutlineGeometry(const Cont
         auto& points = contour.points;
 
         auto geometry = vsg::Geometry::create();
-        auto vertices = vsg::vec3Array::create(points.size());
+        auto vertices = vsg::vec3Array::create(uint32_t(points.size()));
         geometry->arrays.push_back(vertices);
 
         for (size_t i = 0; i < points.size(); ++i)
@@ -141,7 +141,7 @@ vsg::ref_ptr<vsg::Group> ReaderWriter_freetype::createOutlineGeometry(const Cont
             vertices->set(i, vsg::vec3(points[i].x, points[i].y, 0.0f));
         }
 
-        geometry->commands.push_back(vsg::Draw::create(points.size(), 0, 0, 0));
+        geometry->commands.push_back(vsg::Draw::create(uint32_t(points.size()), 0, 0, 0));
 
         group->addChild(geometry);
     }
@@ -190,7 +190,7 @@ bool ReaderWriter_freetype::generateOutlines(FT_Outline& outline, Contours& in_c
 
         int numSteps = 10;
 
-        float dt = 1.0 / float(numSteps);
+        float dt = 1.0f / float(numSteps);
         float u = dt;
         for (int i = 1; i < numSteps; ++i)
         {
@@ -539,7 +539,7 @@ vsg::ref_ptr<vsg::Object> ReaderWriter_freetype::read(const vsg::Path& filename,
     int quad_margin = texel_margin / 2;
 
     unsigned int provisional_cells_across = static_cast<unsigned int>(ceil(sqrt(double(face->num_glyphs))));
-    unsigned int provisional_width = provisional_cells_across * (average_width + texel_margin);
+    unsigned int provisional_width = provisional_cells_across * ((unsigned int)(average_width) + texel_margin);
 
     //provisional_width = 1024;
 
@@ -599,7 +599,7 @@ vsg::ref_ptr<vsg::Object> ReaderWriter_freetype::read(const vsg::Path& filename,
     double total_nearest_edge = 0.0;
     double total_outside_edge = 0.0;
 
-    auto glyphMetrics = vsg::GlyphMetricsArray::create(sortedGlyphQuads.size() + 1);
+    auto glyphMetrics = vsg::GlyphMetricsArray::create(uint32_t(sortedGlyphQuads.size()) + 1);
     auto charmap = vsg::uintArray::create(max_charcode + 1);
     uint32_t destation_glyphindex = 0;
 
